@@ -1,0 +1,24 @@
+from scrapy.spider import BaseSpider
+from scrapy.spider import Spider
+from scrapy.selector import Selector
+  
+#class firstscrapySpider(BaseSpider):
+class firstscrapySpider(Spider):
+	name = 'firstscrapy'
+	allowed_domains = ['blog.csdn.net']####
+	#start_urls = ['http://news.ycombinator.com']
+	#start_urls = ['http://www.baidu.com']
+	start_urls = ['http://blog.csdn.net/leoking01/']
+
+	def parse(self, response):
+		sel = Selector(response)    
+		sites = sel.xpath('//td[@class="title"]')
+		for site in sites:
+			title = site.xpath('a/text()').extract()
+			link = site.xpath('a/@href').extract()
+			filename = response.url.split("/")[-2]  
+			open(filename, 'wb').write(response.body)  
+
+			print title, link
+
+
