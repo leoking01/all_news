@@ -1,0 +1,3 @@
+nohup ./auto_scrapy_sina.sh>log  2>&1 &
+nohup ./auto_scrapy_qq.sh>log  2>&1 &
+nohup ./auto_scrapy_all.sh>log  2>&1 &
