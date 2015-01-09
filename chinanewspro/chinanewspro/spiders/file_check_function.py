@@ -113,35 +113,49 @@ def file_check(dirs_base,hash):
         if os.path.isdir(dir_0):
             for dir_a in os.listdir(dir_0):
                 dir_b=dir_0+'/'+dir_a
+                ##如果dir_b 是文件夹
                 if os.path.isdir(dir_b):
                     for file in os.listdir(dir_b):
                         if hash==file:
-                            state=1
+                            state = 1
                             v=os.path.getsize(dir_b+'/'+''.join(file) )
                             if v<200:
-                                state=0
-                                pass
-                                #print '文件虽然存在但有异常(文件过小,可能是假新闻.)'
+                                state = 2
+                                ##print '文件虽然存在但有异常(文件过小,可能是假新闻.)a'##all_news
                             else:
-                                #print '文件是正常的.'
+                                ##print '文件是正常的.b'
                                 pass
+                            return state
                         else:
                             pass
-                else:
+                ##如果dir_b是文件
+                elif os.path.isfile(dir_b):
                     if hash==dir_a:
-                        state=1
+                        state = 1
                         v=os.path.getsize(dir_b )
                         if v<100:
-                            state=0
+                            state = 2
                             pass
-                            #print '文件虽然存在但有异常(文件过小,可能是假新闻.)'
+                            ##print '文件虽然存在但有异常(文件过小,可能是假新闻.)c'##百度新闻、新浪、等新闻的
                         else:
-                            #print '文件是正常的.'
+                            ##print '文件是正常的.d'
                             pass
+                        return state
                     else:
                         pass
         else:
-            pass 
+            if hash==dir_0:
+                state = 1
+                v=os.path.getsize(dir_0 )
+                if v<100:
+                    state = 2
+                    print '文件虽然存在但有异常(文件过小,可能是假新闻.)e'#### 实际不会使用的
+                else:
+                    print '文件是正常的.f'
+                    pass
+                return state
+            else:
+                pass
     return state
     
    
@@ -151,6 +165,8 @@ def news_data_check(dirs_base,hash):
     for dir in dir_base:
         path_t = dirs_base+'/'+dir
         state = file_check(path_t,hash)
+        if state!=0:
+            return state
 
     return state
 

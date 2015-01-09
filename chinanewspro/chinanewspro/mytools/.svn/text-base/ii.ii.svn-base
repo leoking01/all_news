@@ -22,18 +22,19 @@
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
 
 from os import path
-import datetime
-import hashlib
-
-from twisted.enterprise import adbapi
-import MySQLdb.cursors
-import MySQLdb
-
 from scrapy import signals
 from scrapy.xlib.pydispatch import dispatcher
-from scrapy import log
 
-class ChinanewsproPipeline(object):
+from twisted.enterprise import adbapi
+import datetime
+import MySQLdb.cursors
+
+import MySQLdb
+
+from scrapy import log
+import hashlib
+
+class QqproPipeline(object):
     def __init__(self):
         self.dbpool = adbapi.ConnectionPool('MySQLdb', db='db_luokun',
             user='root', passwd='', cursorclass=MySQLdb.cursors.DictCursor,
@@ -53,7 +54,7 @@ class ChinanewsproPipeline(object):
         title_a=['']
         if len(item['title'])!=0:
             title_a=''.join(  item['title'][0]  ).encode('utf-8')##!!必须采用严格的格式要求，保持一致
-            re = tx.execute("select * from chinanews where title = %s", (item['title'][0], ))
+            re = tx.execute("select * from qqnews where title = %s", (item['title'][0], ))
             if re:
                 log.msg("Item already stored in db: %s" % item, level=log.DEBUG)
             else:
@@ -77,10 +78,9 @@ class ChinanewsproPipeline(object):
                     #    item['hash']=['']
                     #print "pipline: item[\'time_release\']:",''.join( item['time_release'] ).encode('utf-8')
                         
-                    tx.execute( "insert into chinanews(title,link,response_news,time_release,time_add,hash,manufacturer,path)"
-                            " values(%s,%s,%s,%s,%s,%s,%s,%s)" ,(title_a,item['link'],item['response_news'],item['time_release'] ,t,item['hash'],item['manufacturer'],item['path'] )   )
+                    tx.execute( "insert into qqnews(title,link,response_news,time_release,time_add,hash,manufacturer)"
+                            " values(%s,%s,%s,%s,%s,%s,%s)" ,(title_a,item['link'],item['response_news'],item['time_release'] ,t,item['hash'],item['manufacturer'] )   )
                     print 'db_store: title: ',''.join(item['title'][0]).encode('utf-8')
-                    print '\n\n\n\n'
                     log.msg("Item stored in db: %s" % item, level=log.DEBUG)
 
                      
